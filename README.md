@@ -1,4 +1,4 @@
-# Detox Mobile Automation Project
+# SCOS Detox Mobile Automation Exercise
  
 ## Project Overview
 
