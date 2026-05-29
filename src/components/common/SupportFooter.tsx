@@ -17,6 +17,7 @@ import {
   Text,
   StyleSheet,
   Linking,
+  TouchableOpacity,
 } from 'react-native';
 import { useTheme } from '../../hooks/useTheme';
 import spacing, { insets } from '../../theme/spacing';
@@ -46,16 +47,19 @@ const SupportFooter: React.FC = () => {
   return (
     <View style={styles.footer}>
       <Text style={[styles.text, { color: colors.textMuted }]}>
-        Trouble logging in?{' '}
-        <Text
-          style={[styles.link, { color: colors.accentBlue }]}
-          onPress={handleEmailPress}
-          accessibilityRole="link"
-          accessibilityLabel={`Email support at ${SUPPORT_EMAIL}`}
-        >
+        Trouble logging in?
+      </Text>
+      <TouchableOpacity
+        testID="supportEmailLink"
+        onPress={handleEmailPress}
+        activeOpacity={0.7}
+        accessibilityRole="link"
+        accessibilityLabel={`Email support at ${SUPPORT_EMAIL}`}
+      >
+        <Text style={[styles.link, { color: colors.accentBlue }]}>
           {SUPPORT_EMAIL}
         </Text>
-      </Text>
+      </TouchableOpacity>
     </View>
   );
 };

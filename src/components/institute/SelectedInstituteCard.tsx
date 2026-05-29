@@ -59,6 +59,7 @@ const SelectedInstituteCard: React.FC<SelectedInstituteCardProps> = ({ institute
 
   return (
     <View
+      testID="selectedInstituteCard"
       style={[
         styles.card,
         { backgroundColor: palette.background, borderColor: palette.border },

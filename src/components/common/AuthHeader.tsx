@@ -48,6 +48,7 @@ const AuthHeader: React.FC<AuthHeaderProps> = ({ userInitial = 'A', onLogout }) 
 
       {/* ── User avatar (right side) — tap triggers logout ────────────── */}
       <TouchableOpacity
+        testID="profileLogoutButton"
         style={[
           appHeader.avatar,
           { backgroundColor: colors.surface, borderColor: colors.border },

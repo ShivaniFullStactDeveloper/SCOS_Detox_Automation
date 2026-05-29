@@ -33,16 +33,9 @@ const BrandHeader: React.FC = () => {
     <View style={styles.container}>
       {/* ── Logo ──────────────────────────────────────────────────────────── */}
       <Image source={logoSource} testID="logo" style={styles.logo} resizeMode="contain"/>
-      {/* <View testID="logo">
-        <Image
-          source={logoSource}
-          style={styles.logo}
-          resizeMode="contain"
-        />
-      </View> */}
 
       {/* ── Brand name ────────────────────────────────────────────────────── */}
-      <View style={styles.brandRow}>
+      <View style={styles.brandRow} testID="mentrixos">
         <Text style={[styles.brandText, { color: colors.brandMentrix }]}>
           {STRINGS.BRAND_MENTRIX}
         </Text>

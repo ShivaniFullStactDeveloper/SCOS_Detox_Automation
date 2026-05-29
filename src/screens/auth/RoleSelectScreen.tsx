@@ -107,6 +107,7 @@ const RoleSelectScreen: React.FC<Props> = ({ navigation, route }) => {
         {hasMultiInstitute && (
           <View style={styles.backRow}>
             <TouchableOpacity
+              testID="changeInstituteButton"
               style={[
                 styles.backBtn,
                 {
@@ -141,7 +142,10 @@ const RoleSelectScreen: React.FC<Props> = ({ navigation, route }) => {
         )}
 
         <View style={styles.greeting}>
-          <Text style={[styles.greetTitle, { color: colors.textPrimary }]}>
+          <Text
+            testID="roleHeaderTitle"
+            style={[styles.greetTitle, { color: colors.textPrimary }]}
+          >
             {STRINGS.ROLE_SELECT_TITLE}
           </Text>
           <Text style={[styles.greetSub, { color: colors.textSecondary }]}>
@@ -167,7 +171,7 @@ const RoleSelectScreen: React.FC<Props> = ({ navigation, route }) => {
             No roles available for this institute.
           </Text>
         ) : (
-          <View style={styles.list}>
+          <View testID="roleList" style={styles.list}>
             {roles.map((role, index) => (
               <RoleCard
                 key={role.role_id}

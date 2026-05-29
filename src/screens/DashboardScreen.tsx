@@ -9,8 +9,8 @@ import {
   RefreshControl,
   StyleSheet,
   Image,
-  Alert,
   BackHandler,
+  Modal,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useFocusEffect } from '@react-navigation/native';
@@ -92,6 +92,7 @@ const DashboardScreen: React.FC<Props> = ({ navigation }) => {
   const [error, setError] = useState<string>('');
   const [stats, setStats] = useState<StatItem[]>([]);
   const [avatarFailed, setAvatarFailed] = useState<boolean>(false);
+  const [logoutVisible, setLogoutVisible] = useState<boolean>(false);
 
   const loadDashboard = useCallback(async (): Promise<void> => {
     setError('');
@@ -124,17 +125,13 @@ const DashboardScreen: React.FC<Props> = ({ navigation }) => {
 
   // ── Logout Handler ────────────────────────────────────────────────────────
   const handleLogout = (): void => {
-    Alert.alert(STRINGS.DASHBOARD_LOGOUT_TITLE, STRINGS.DASHBOARD_LOGOUT_MSG, [
-      { text: STRINGS.DASHBOARD_LOGOUT_CANCEL, style: 'cancel' },
-      {
-        text: STRINGS.DASHBOARD_LOGOUT_CONFIRM,
-        style: 'destructive',
-        onPress: async () => {
-          await logout();
-          navigation.reset({ index: 0, routes: [{ name: 'Login' }] });
-        },
-      },
-    ]);
+    setLogoutVisible(true);
+  };
+
+  const confirmLogout = async (): Promise<void> => {
+    setLogoutVisible(false);
+    navigation.reset({ index: 0, routes: [{ name: 'Login' }] });
+    await logout();
   };
 
   const avatarUrl = `https://api.dicebear.com/7.x/avataaars/svg?seed=${
@@ -203,6 +200,7 @@ const DashboardScreen: React.FC<Props> = ({ navigation }) => {
           </TouchableOpacity>
 
           <TouchableOpacity
+            testID="profileLogoutButton"
             style={[styles.avatarWrap, { borderColor: colors.accentBlue }]}
             onPress={handleLogout}
             activeOpacity={0.8}
@@ -255,6 +253,7 @@ const DashboardScreen: React.FC<Props> = ({ navigation }) => {
               {error}
             </Text>
             <TouchableOpacity
+              testID="retryButton"
               style={[
                 styles.retryBtn,
                 {
@@ -276,7 +275,7 @@ const DashboardScreen: React.FC<Props> = ({ navigation }) => {
           <HeroSkeleton />
         ) : (
           <View style={styles.hero}>
-            <Text style={[styles.heroTitle, { color: colors.textPrimary }]}>
+            <Text testID="dashboardGreeting" style={[styles.heroTitle, { color: colors.textPrimary }]}>
               {STRINGS.DASHBOARD_WELCOME}
             </Text>
             <Text style={[styles.heroSub, { color: colors.accentBlue }]}>
@@ -290,6 +289,7 @@ const DashboardScreen: React.FC<Props> = ({ navigation }) => {
             ? [1, 2, 3, 4].map(i => <StatCardSkeleton key={i} />)
             : stats.map(stat => (
                 <View
+                  testID={`dashboardCard_${stat.id}`}
                   key={stat.id}
                   style={[
                     styles.statCard,
@@ -333,6 +333,55 @@ const DashboardScreen: React.FC<Props> = ({ navigation }) => {
               ))}
         </View>
       </ScrollView>
+
+      <Modal
+        visible={logoutVisible}
+        transparent
+        animationType="fade"
+        onRequestClose={() => setLogoutVisible(false)}
+      >
+        <View testID="logoutModal" style={styles.modalOverlay}>
+          <View
+            style={[
+              styles.modalCard,
+              { backgroundColor: colors.surface, borderColor: colors.border },
+            ]}
+          >
+            <Text style={[styles.modalTitle, { color: colors.textPrimary }]}>
+              {STRINGS.DASHBOARD_LOGOUT_TITLE}
+            </Text>
+            <Text style={[styles.modalMessage, { color: colors.textSecondary }]}>
+              {STRINGS.DASHBOARD_LOGOUT_MSG}
+            </Text>
+            <View style={styles.modalActions}>
+              <TouchableOpacity
+                testID="cancelLogoutButton"
+                style={[styles.modalButton, { borderColor: colors.border }]}
+                onPress={() => setLogoutVisible(false)}
+                activeOpacity={0.8}
+              >
+                <Text style={{ color: colors.textPrimary, fontWeight: '700' }}>
+                  {STRINGS.DASHBOARD_LOGOUT_CANCEL}
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                testID="logoutButton"
+                style={[
+                  styles.modalButton,
+                  styles.logoutButton,
+                  { backgroundColor: colors.primaryBtn },
+                ]}
+                onPress={confirmLogout}
+                activeOpacity={0.8}
+              >
+                <Text style={{ color: colors.primaryBtnText, fontWeight: '700' }}>
+                  {STRINGS.DASHBOARD_LOGOUT_CONFIRM}
+                </Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      </Modal>
     </SafeAreaView>
   );
 };
@@ -428,5 +477,45 @@ const styles = StyleSheet.create({
     paddingVertical: spacing.sm + 2,
     borderRadius: radius.md,
     borderWidth: 1,
+  },
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0,0,0,0.35)',
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: spacing.xl,
+  },
+  modalCard: {
+    width: '100%',
+    maxWidth: 360,
+    borderRadius: radius.md,
+    borderWidth: 1,
+    padding: spacing.xl,
+  },
+  modalTitle: {
+    ...typography.sectionTitle,
+    marginBottom: spacing.sm,
+    textAlign: 'center',
+  },
+  modalMessage: {
+    ...typography.body,
+    marginBottom: spacing.xl,
+    textAlign: 'center',
+  },
+  modalActions: {
+    flexDirection: 'row',
+    gap: spacing.md,
+  },
+  modalButton: {
+    flex: 1,
+    minHeight: 44,
+    borderRadius: radius.sm,
+    borderWidth: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingHorizontal: spacing.md,
+  },
+  logoutButton: {
+    borderWidth: 0,
   },
 });

@@ -144,6 +144,7 @@ const InstituteSelectScreen: React.FC<Props> = ({ navigation }) => {
           <>
             <View style={styles.greeting}>
               <Text
+                testID="instituteGreeting"
                 style={[styles.greetTitle, { color: colors.textPrimary }]}
               >{`${STRINGS.GREETING_HEY} ${firstName} 👋`}</Text>
               <Text style={[styles.greetSub, { color: colors.textSecondary }]}>
@@ -177,6 +178,7 @@ const InstituteSelectScreen: React.FC<Props> = ({ navigation }) => {
                 />
                 {search.length > 0 && (
                   <TouchableOpacity
+                    testID="clearSearchButton"
                     onPress={() => setSearch('')}
                     activeOpacity={0.7}
                   >

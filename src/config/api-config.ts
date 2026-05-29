@@ -26,8 +26,8 @@ type GlobalWithApiOverride = typeof globalThis & {
  */
 const DEFAULT_BASE_URL =
   Platform.OS === 'android'
-    ? 'http://10.0.2.2:3001'
-    : 'http://localhost:3001';
+    ? 'http://10.0.2.2:3005'
+    : 'http://localhost:3005';
 
 /**
  * Reads the runtime override injected via the global object.
